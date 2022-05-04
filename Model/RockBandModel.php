@@ -13,7 +13,6 @@
             "member_count" ,
             "music_type" ,
             "presentation"
-
         );
 
         /**
@@ -48,8 +47,6 @@
                     }
                 }
             }
-
-
 
             return false ;
         }

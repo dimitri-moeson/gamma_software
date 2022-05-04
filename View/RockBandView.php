@@ -32,7 +32,7 @@
         protected static function footer_html(){
 
             return
-                 "\r\n"."\t\t".' </div>'
+                 "\r\n"."\t\t".'</div>'
                 ."\r\n"."\t\t".'</div>'
                 ."\r\n"."\t".'</body>'
                 ."\r\n".'</html>';
@@ -72,13 +72,13 @@
                 }
             }
             $html .=
-                 "\r\n"."\t\t\t".' <div class="row">'
+                 "\r\n"."\t\t\t".'<div class="row">'
                 ."\r\n"."\t\t\t".'<form method="post" enctype="multipart/form-data">'
                 ."\r\n"."\t\t\t".'<div>'
                 ."\r\n"."\t\t\t".'<label for="file">Sélectionner le fichier à envoyer</label>'
-                ."\r\n"."\t\t\t".'<input type="file" id="file" name="file">'
+                ."\r\n"."\t\t\t".'<input type="file" id="file" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">'
                 ."\r\n"."\t\t\t".'</div>'
-                ."\r\n"."\t\t\t".' <div>'
+                ."\r\n"."\t\t\t".'<div>'
                 ."\r\n"."\t\t\t".'<input type="submit" name="send" value="Envoyer" />'
                 ."\r\n"."\t\t\t".'</div>'
                 ."\r\n"."\t\t\t".'</form>'

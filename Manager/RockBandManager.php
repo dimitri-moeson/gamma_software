@@ -17,11 +17,11 @@
             if ($red !== false) {
 
                 $data["id"] = $red->id;
-                $sql = "update rock_band set " . $set . " where id = :id ";
+                $sql = "update `rock_band` set " . $set . " where `id` = :id ";
 
             } else {
 
-                $sql = "insert into rock_band set " . $set;
+                $sql = "insert into `rock_band` set " . $set;
             }
 
             DataBaseManager::getInstance()->execute($sql,$data);
@@ -35,7 +35,7 @@
          */
         public function remove_band($exists){
 
-            $sql_del = "delete from rock_band where id not in ( :" . implode(', :', array_keys($exists) ) . ")";
+            $sql_del = "delete from `rock_band` where `id` not in ( :" . implode(', :', array_keys($exists) ) . ")";
 
             return DataBaseManager::getInstance()->execute($sql_del,$exists);
         }
@@ -47,7 +47,7 @@
          */
         public function get_band($name){
 
-            $sql = "select id from rock_band where `name` = :name  ;";
+            $sql = "select `id` from `rock_band` where `name` = :name  ;";
             $data = ['name' => $name ];
 
             return  DataBaseManager::getInstance()->result(true , $sql, $data);
@@ -59,7 +59,7 @@
          */
         public function list_band()
         {
-            $sql_list = "select * from rock_band ";
+            $sql_list = "select * from `rock_band` ";
 
             return DataBaseManager::getInstance()->result(false , $sql_list);
         }
