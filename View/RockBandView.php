@@ -18,12 +18,13 @@
 
             return
                 '<!--DOCTYPE html-->'
-                ."\r\n".'<html lang="fr">'
-                ."\r\n"."\t".'<head>'
-                ."\r\n"."\t".'</head>'
-                ."\r\n"."\t".'<body>'
-                ."\r\n"."\t\t".'<div id="wrap">'
-                ."\r\n"."\t\t".'<div class="container">';
+                .self::indent(0).'<html lang="fr">'
+                .self::indent(1).'<head>'
+                .self::indent(2).'<title>Import</title>'
+                .self::indent(1).'</title>'
+                .self::indent(1).'<body>'
+                .self::indent(2).'<div id="wrap">'
+                .self::indent(3).'<div class="container">';
         }
 
         /**
@@ -32,10 +33,10 @@
         protected static function footer_html(){
 
             return
-                 "\r\n"."\t\t".'</div>'
-                ."\r\n"."\t\t".'</div>'
-                ."\r\n"."\t".'</body>'
-                ."\r\n".'</html>';
+                 self::indent(3).'</div>'
+                .self::indent(2).'</div>'
+                .self::indent(1).'</body>'
+                .self::indent(0).'</html>';
         }
 
         /**
@@ -54,6 +55,23 @@
         }
 
         /**
+         * @param $repeat
+         * @return string
+         */
+        private static function indent($repeat)
+        {
+            $html = "\r\n" ;
+
+            for($i = 0 ; $i < $repeat ; $i++){
+
+                $html .= "\t" ;
+
+            }
+
+            return $html ;
+        }
+
+        /**
          * formulaire de chargement
          * @return string
          */
@@ -63,26 +81,26 @@
 
             if($controller->isImported()) {
 
-                $html .= "\r\n" . "\t\t\t" . "<b>" . UploadModel::getErr($controller->getErr()) . "</b><br/>";
+                $html .= self::indent(3) . "<b>" . UploadModel::getErr($controller->getErr()) . "</b><br/>";
 
                 if(!empty($controller->getFailed())){
 
-                    $html .= "\r\n" . "\t\t\t" . "<b>les lignes suivantes n'ont pas pu etre importées : [" . implode( "]-[", $controller->getFailed()) . "]</b><br/>";
+                    $html .= self::indent(3) . "<b>les lignes suivantes n'ont pas pu etre importées : [" . implode( "]-[", $controller->getFailed()) . "]</b><br/>";
 
                 }
             }
             $html .=
-                 "\r\n"."\t\t\t".'<div class="row">'
-                ."\r\n"."\t\t\t".'<form method="post" enctype="multipart/form-data">'
-                ."\r\n"."\t\t\t".'<div>'
-                ."\r\n"."\t\t\t".'<label for="file">Sélectionner le fichier à envoyer</label>'
-                ."\r\n"."\t\t\t".'<input type="file" id="file" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">'
-                ."\r\n"."\t\t\t".'</div>'
-                ."\r\n"."\t\t\t".'<div>'
-                ."\r\n"."\t\t\t".'<input type="submit" name="send" value="Envoyer" />'
-                ."\r\n"."\t\t\t".'</div>'
-                ."\r\n"."\t\t\t".'</form>'
-                ."\r\n"."\t\t\t".'</div>';
+                 self::indent(3).'<div class="row">'
+                .self::indent(4).'<form method="post" enctype="multipart/form-data">'
+                .self::indent(5).'<div>'
+                .self::indent(6).'<label for="file">Sélectionner le fichier à envoyer</label>'
+                .self::indent(6).'<input type="file" id="file" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">'
+                .self::indent(5).'</div>'
+                .self::indent(5).'<div>'
+                .self::indent(6).'<input type="submit" name="send" value="Envoyer" />'
+                .self::indent(5).'</div>'
+                .self::indent(4).'</form>'
+                .self::indent(3).'</div>';
 
             return $html ;
         }
@@ -94,44 +112,44 @@
         private static function list_import(RockBandManager $manager){
 
             $html =
-                 "\r\n"."\t\t\t".'<table border="1">'
-                ."\r\n"."\t\t\t".'<tbody>';
+                 self::indent(3).'<table border="1">'
+                .self::indent(4).'<tbody>';
 
             foreach( $manager->list_band() as $item) {
 
                 $html .=
-                     "\r\n"."\t\t\t".'<tr>'
-                    ."\r\n"."\t\t\t".'<td>'.$item->id.'</td>'
-                    ."\r\n"."\t\t\t".'<td>'.$item->name.'</td>'
-                    ."\r\n"."\t\t\t".'<td>'.$item->country.'</td>'
-                    ."\r\n"."\t\t\t".'<td>'.$item->city.'</td>'
-                    ."\r\n"."\t\t\t".'<td>'.$item->start_year.'</td>'
-                    ."\r\n"."\t\t\t".'<td>'.RockBandModel::nullable($item->end_year).'</td>'
-                    ."\r\n"."\t\t\t".'<td>'.$item->founder.'</td>'
-                    ."\r\n"."\t\t\t".'<td>'.RockBandModel::nullable($item->member_count).'</td>'
-                    ."\r\n"."\t\t\t".'<td>'.$item->music_type.'</td>'
-                    ."\r\n"."\t\t\t".'<td>'.$item->presentation.'</td>'
-                    ."\r\n"."\t\t\t".'</tr>';
+                     self::indent(5).'<tr>'
+                    .self::indent(6).'<td>'.$item->id.'</td>'
+                    .self::indent(6).'<td>'.$item->name.'</td>'
+                    .self::indent(6).'<td>'.$item->country.'</td>'
+                    .self::indent(6).'<td>'.$item->city.'</td>'
+                    .self::indent(6).'<td>'.$item->start_year.'</td>'
+                    .self::indent(6).'<td>'.RockBandModel::nullable($item->end_year).'</td>'
+                    .self::indent(6).'<td>'.$item->founder.'</td>'
+                    .self::indent(6).'<td>'.RockBandModel::nullable($item->member_count).'</td>'
+                    .self::indent(6).'<td>'.$item->music_type.'</td>'
+                    .self::indent(6).'<td>'.$item->presentation.'</td>'
+                    .self::indent(5).'</tr>';
 
             }
 
             $html .=
-                 "\r\n"."\t\t\t".'</tbody>'
-                ."\r\n"."\t\t\t".'<thead>'
-                ."\r\n"."\t\t\t".'<tr>'
-                ."\r\n"."\t\t\t".'<th>ID</th>'
-                ."\r\n"."\t\t\t".'<th>Nom du groupe</th>'
-                ."\r\n"."\t\t\t".'<th>Origine</th>'
-                ."\r\n"."\t\t\t".'<th>Ville</th>'
-                ."\r\n"."\t\t\t".'<th>Année de début</th>'
-                ."\r\n"."\t\t\t".'<th>Année de sépartion</th>'
-                ."\r\n"."\t\t\t".'<th>Fondateurs</th>'
-                ."\r\n"."\t\t\t".'<th>Membres</th>'
-                ."\r\n"."\t\t\t".'<th>Courant musical</th>'
-                ."\r\n"."\t\t\t".'<th>Présentation </th>'
-                ."\r\n"."\t\t\t".'</tr>'
-                ."\r\n"."\t\t\t".'</thead>'
-                ."\r\n"."\t\t\t".'</table>';
+                 self::indent(4).'</tbody>'
+                .self::indent(4).'<thead>'
+                .self::indent(5).'<tr>'
+                .self::indent(6).'<th>ID</th>'
+                .self::indent(6).'<th>Nom du groupe</th>'
+                .self::indent(6).'<th>Origine</th>'
+                .self::indent(6).'<th>Ville</th>'
+                .self::indent(6).'<th>Année de début</th>'
+                .self::indent(6).'<th>Année de sépartion</th>'
+                .self::indent(6).'<th>Fondateurs</th>'
+                .self::indent(6).'<th>Membres</th>'
+                .self::indent(6).'<th>Courant musical</th>'
+                .self::indent(6).'<th>Présentation </th>'
+                .self::indent(5).'</tr>'
+                .self::indent(4).'</thead>'
+                .self::indent(4).'</table>';
 
             return $html ;
         }

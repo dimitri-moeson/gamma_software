@@ -30,6 +30,10 @@
          */
         private $failed;
 
+        /**
+         * RockBandController constructor.
+         * @param RockBandManager $manager
+         */
         public function __construct(RockBandManager $manager)
         {
             $this->manager = $manager ;
@@ -38,6 +42,9 @@
             $this->imported = false ;
         }
 
+        /**
+         * @param $filedata
+         */
         public function import($filedata)
         {
             $this->imported = true ;

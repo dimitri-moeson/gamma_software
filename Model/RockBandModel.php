@@ -2,6 +2,9 @@
 
     class RockBandModel{
 
+        /**
+         * @var array
+         */
         private static $data_model = array(
 
             "name" ,

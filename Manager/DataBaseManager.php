@@ -1,4 +1,5 @@
 <?php namespace Manager {
+    
     use PDO;
 
     class DataBaseManager

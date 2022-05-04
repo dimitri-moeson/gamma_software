@@ -6,6 +6,9 @@
      */
     class UploadModel
     {
+        /**
+         * @var array
+         */
         private static $error_model = array(
 
             0 => 'le téléchargement est correct',
@@ -23,8 +26,15 @@
             9 => "le fichier XLSX est invalide."
         );
 
+        /**
+         * @var array
+         */
         private static $allowed_ext = array('xlsx');
 
+        /**
+         * @param $index
+         * @return mixed
+         */
         public static function getErr($index)
         {
             if(array_key_exists($index,self::$error_model))
