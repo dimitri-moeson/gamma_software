@@ -36,8 +36,8 @@ DROP TABLE IF EXISTS `rock_band`;
 CREATE TABLE IF NOT EXISTS `rock_band` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `country` varchar(255) NOT NULL,
-  `city` varchar(255) NOT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
   `start_year` int(11) NOT NULL,
   `end_year` int(11) DEFAULT NULL,
   `founder` varchar(255) DEFAULT NULL,

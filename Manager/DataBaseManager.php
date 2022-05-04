@@ -1,5 +1,5 @@
 <?php namespace Manager {
-    
+
     use PDO;
 
     class DataBaseManager
@@ -42,6 +42,7 @@
                     $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 } catch (\Exception $e) {
+
                     die ("Connection failed: " . $e->getMessage());
                 }
             }
