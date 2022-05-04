@@ -3,6 +3,7 @@
     use Controller\RockBandController;
     use Manager\RockBandManager;
     use Model\RockBandModel;
+    use Model\UploadModel;
 
     /**
      * Class RockBandView
@@ -53,6 +54,7 @@
         }
 
         /**
+         * formulaire de chargement
          * @return string
          */
         private static function form_import(RockBandController $controller){
@@ -61,7 +63,13 @@
 
             if($controller->isImported()) {
 
-                $html .= "\r\n" . "\t\t\t" . "<b>" . RockBandModel::getErr($controller->getErr()) . "</b><br/>";
+                $html .= "\r\n" . "\t\t\t" . "<b>" . UploadModel::getErr($controller->getErr()) . "</b><br/>";
+
+                if(!empty($controller->getFailed())){
+
+                    $html .= "\r\n" . "\t\t\t" . "<b>les lignes suivantes n'ont pas pu etre importées : [" . implode( "]-[", $controller->getFailed()) . "]</b><br/>";
+
+                }
             }
             $html .=
                  "\r\n"."\t\t\t".' <div class="row">'

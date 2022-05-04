@@ -16,12 +16,21 @@
          */
         private $err;
 
+        /**
+         * @var bool
+         */
         private $imported = false ;
+
+        /**
+         * @var array
+         */
+        private $failed;
 
         public function __construct(RockBandManager $manager)
         {
             $this->manager = $manager ;
             $this->err = 0 ;
+            $this->failed = [];
             $this->imported = false ;
         }
 
@@ -56,6 +65,10 @@
                                     $red = $this->manager->get_band($data["name"]);
 
                                     $exists["index_" . $k] = $this->manager->save_band($data, $red);
+
+                                } else {
+
+                                    $this->failed[] = $k;
                                 }
                             }
                         }
@@ -88,6 +101,14 @@
         public function isImported()
         {
             return $this->imported;
+        }
+
+        /**
+         * @return array
+         */
+        public function getFailed()
+        {
+            return $this->failed;
         }
     }
 }
