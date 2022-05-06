@@ -12,9 +12,9 @@ class ConfigManager
      */
     public static function getInstance():ConfigManager
     {
-        if(is_null(self::$_instance)){
+        if(is_null(self::$_instance))
             self::$_instance = new ConfigManager();
-        }
+        
         return self::$_instance;
     }
 
@@ -32,15 +32,13 @@ class ConfigManager
 
         $this->settings = parse_ini_file( $config_file , true);
 
-        if($this->option("reporting","error")){
-
+        if($this->option("reporting","error"))
             ini_set('error_reporting', E_ALL);
-        }
+        
 
-        if($this->option("display","error")){
-
+        if($this->option("display","error"))
             ini_set('display_errors', true);
-        }
+        
 
     }
 

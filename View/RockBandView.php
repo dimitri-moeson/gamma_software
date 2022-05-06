@@ -67,9 +67,7 @@
         private static function indent($repeat)
         {
             $html = "\r\n" ;
-
             for($i = 0 ; $i < $repeat ; $i++) $html .= "\t" ;
-
             return $html ;
         }
 
@@ -88,11 +86,8 @@
 
                 $html .= self::indent(3) . "<b>" . Autoloader::getInstance()->model("upload")::getErr($controller->getErr()) . "</b><br/>";
 
-                if(!empty($controller->getFailed())){
-
+                if(!empty($controller->getFailed()))
                     $html .= self::indent(3) . "<b>les lignes suivantes n'ont pas pu etre importées : [" . implode( "]-[", $controller->getFailed()) . "]</b><br/>";
-
-                }
             }
             $html .=
                  self::indent(3).'<div class="row">'

@@ -24,12 +24,10 @@
             $data["country"] = $country_id;
 
             if ($band !== false) {
-
                 $data["id"] = $band->id;
                 $sql = "update `rock_band` set " . $set . " where `id` = :id ;";
 
             } else {
-
                 $sql = "insert into `rock_band` set " . $set." ;";
             }
 
@@ -76,9 +74,7 @@
             $country = Autoloader::getInstance()->manager("DataBase")->result(true , $sql, $data);
 
             if($country !== false ){
-
                 return $country->id ;
-
             }
 
             $sql = "insert into `country` set `name` = :name ;";
@@ -97,9 +93,7 @@
             $city = Autoloader::getInstance()->manager("DataBase")->result(true , $sql, $data);
 
             if($city !== false ){
-
                 return $city->id ;
-
             }
 
             $sql = "insert into `city` set `name` = :name, country_id = :country_id ;";

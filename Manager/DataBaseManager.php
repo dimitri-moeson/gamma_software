@@ -52,23 +52,19 @@
                     $trace = $conf->exists('db_trac')  ;
                     $charset = $conf->exists('db_char')  ;
 
-                    if($trace !== false ){
-
+                    if($trace !== false )
                         $arr_conf[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION  ;
-                    }
+                    
 
                     if($charset !== false ) {
 
                         $sql_charset =  'SET NAMES ' . $conf->option('db_char') ;
 
-                        if($conf->option('db_coll') != false) {
-
+                        if($conf->option('db_coll') != false)
                             $sql_charset .= ' COLLATE '.$conf->option('db_coll') ;
-                        }
-
+                        
                         $sql_charset .= ';' ;
-
-
+                        
                         $dsn .= 'charset=' . $conf->option('db_char') . ';';
                         $arr_conf[PDO::MYSQL_ATTR_INIT_COMMAND] = $sql_charset ;
                     }
@@ -120,14 +116,10 @@
 
             if($sth!== false) {
 
-                if ($one) {
-
+                if ($one)
                     return $sth->fetch(PDO::FETCH_OBJ);
-
-                } else {
-
+                else
                     return $sth->fetchAll(PDO::FETCH_OBJ);
-                }
             }
         }
 

@@ -49,34 +49,24 @@
             $xlsx = Autoloader::getInstance()->model("Upload")::checking();
 
             if($xlsx!== false) {
-                if (is_int($xlsx)) {
-
+                if (is_int($xlsx))
                     $this->err = $xlsx;
-
-                } else {
-
+                else {
                     // liste des IDs présent en base et correspondant dans le fichier
                     $exists = [];
 
                     foreach ($xlsx->rows() as $k => $getData) {
 
-                        if ($k === 0) {
-
+                        if ($k === 0)
                             continue; // skip first row
-
-                        } else {
+                        else {
 
                             $data = Autoloader::getInstance()->model("RockBand")::convert_format($getData);
 
-                            if ($data !== false) {
-
+                            if ($data !== false)
                                 $exists["index_" . $k] = $this->manager->save_band($data);
-
-                            } else {
-
+                            else
                                 $this->failed[] = $k;
-                            }
-
                         }
                     }
                     $this->manager->remove_band($exists);
@@ -91,8 +81,6 @@
         {
             return $this->err;
         }
-
-
 
         /**
          * @return array

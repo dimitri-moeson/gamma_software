@@ -28,10 +28,9 @@
 
                 $data = self::format_data($getData);
 
-                if (self::confirm_line($data)) {
-
+                if (self::confirm_line($data))
                     return $data ;
-                }
+                
             }
 
             return false ;
@@ -77,16 +76,13 @@
          */
         private static function confirm_line($data){
 
-            if(isset($data["name"])){
-
-                if(!empty($data["name"])) {
-
-                    if(!is_null($data["name"])) {
-
+            if(isset($data["name"]))
+                if(!empty($data["name"]))
+                    if(!is_null($data["name"]))
                         return true;
-                    }
-                }
-            }
+                    
+                
+            
 
             return false ;
         }

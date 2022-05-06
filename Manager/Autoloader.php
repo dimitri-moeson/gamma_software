@@ -41,9 +41,8 @@
 
         public static function getInstance():Autoloader
         {
-            if(is_null(self::$_instance)){
+            if(is_null(self::$_instance))
                 self::$_instance = new Autoloader();
-            }
             return self::$_instance;
         }
 
@@ -57,22 +56,15 @@
 
             $classe_name = ucfirst($type)."\\".ucfirst($name). ucfirst($type);
 
-            if(class_exists($classe_name))
-            {
-                if (!is_callable(array($classe_name, "__construct")))
-                {
-                    if (is_callable(array($classe_name, "getInstance")))
-                    {
-                        //var_dump("singleton $classe_name");
-                        return $classe_name::getInstance($options);
-                    }
-                }
-
-                //var_dump("instance $classe_name");
-                return new $classe_name($options) ;
+            if(class_exists($classe_name)) {
+	            if ( ! is_callable ( [ $classe_name , "__construct" ] ) )
+		            if ( is_callable ( [ $classe_name , "getInstance" ] ) )
+			            return $classe_name ::getInstance ( $options );
+	            
+	            return new $classe_name( $options );
             }
-
-            return false ;
+	
+	        return false ;
         }
 
         /**
