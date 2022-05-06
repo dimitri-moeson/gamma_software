@@ -5,6 +5,7 @@
 	use Manager\DataBaseManager;
 	use Manager\RequestManager;
 	use Model\RockBandModel;
+	use Model\SqlModel;
 	use Model\UploadModel;
 	use View\RockBandView;
 
@@ -94,7 +95,7 @@
         /**
          * @param $name
          * @param array $options
-         * @return RockBandModel|UploadModel
+         * @return RockBandModel|UploadModel|SqlModel
          */
         public function model($name,$options = [])
         {
