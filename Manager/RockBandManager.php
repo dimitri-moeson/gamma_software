@@ -22,7 +22,7 @@
 
             $data["city"] = $city_id;
             $data["country"] = $country_id;
-
+            
             if ($band !== false) {
                 $data["id"] = $band->id;
                 $sql = "update `rock_band` set " . $set . " where `id` = :id ;";
@@ -65,7 +65,12 @@
             return Autoloader::getInstance()->manager("DataBase")->result(true , $sql, $data);
 
         }
-
+	
+	    /**
+	     * @param $name
+	     *
+	     * @return int country_id
+	     */
         private function get_country($name){
 
             $sql = "select `id` from `country` where `name` = :name ;";
@@ -84,7 +89,13 @@
             return Autoloader::getInstance()->manager("DataBase")->lastInsertId();
 
         }
-
+	
+	    /**
+	     * @param $name
+	     * @param $country_id
+	     *
+	     * @return int city_id
+	     */
         private function get_city($name,$country_id){
 
             $sql = "select `id` from `city` where `name` = :name and `country_id` = :country_id ;";
@@ -103,7 +114,7 @@
             return Autoloader::getInstance()->manager("DataBase")->lastInsertId();
 
         }
-
+        
         /**
          * list enregistrement
          * @var DataBaseManager $db
@@ -111,7 +122,14 @@
          */
         public function list_band()
         {
-            $sql_list = "select r.id, r.name ,
+	        $sql_list = "select `id`, `name` ,`start_year` from `rock_band` ;";
+	        
+            return Autoloader::getInstance()->manager("DataBase")->result(false , $sql_list);
+        }
+	
+	    public function get_rock($id)
+	    {
+		    $sql_list = "select r.id, r.name ,
                             r.start_year,
                             r.end_year ,
                             r.founder,
@@ -119,13 +137,16 @@
                             r.music_type ,
                             r.presentation ,
                             co.name as country,
-                            ci.name as city 
-                from `rock_band` r 
+                            ci.name as city
+                from `rock_band` r
                 left join city ci on ci.id = r.city
                 left join country co on co.id = r.country and ci.country_id = co.id
+                where r.id = :id
             ;";
-
-            return Autoloader::getInstance()->manager("DataBase")->result(false , $sql_list);
-        }
+		
+		    $data = ['id' => $id ];
+		    
+		    return Autoloader::getInstance()->manager("DataBase")->result(true , $sql_list , $data);
+	    }
     }
 }

@@ -1,6 +1,7 @@
 <?php namespace Manager {
-
-    use PDO;
+	
+	use Model\SqlModel;
+	use PDO;
 
     class DataBaseManager
     {
@@ -83,8 +84,8 @@
                 }
             }
         }
-
-        /**
+	
+	    /**
          * @param $sql
          * @param array $data
          * @return bool|\PDOStatement
