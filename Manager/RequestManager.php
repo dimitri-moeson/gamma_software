@@ -57,7 +57,7 @@
             return array_key_exists($key, $_FILES);
         }
 
-        public function file($key):array 
+        public function file($key):array
         {
             if($this->uploaded($key))
                 return $_FILES[$key];

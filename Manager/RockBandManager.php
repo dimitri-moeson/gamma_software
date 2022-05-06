@@ -4,7 +4,6 @@
 
     class RockBandManager {
 
-
         /**
          * enregistre/met à jour la ligne en base de données et retourne l'ID associé
          * @param $data
@@ -15,14 +14,19 @@
          */
         public function save_band($data){
 
-            $red = $this->get_band($data["name"]);
+            $band = $this->get_band($data["name"]);
+            $country_id = $this->get_country($data["country"]);
+            $city_id = $this->get_city($data["city"],$country_id);
 
 
             $set = Autoloader::getInstance()->model("RockBand")::str_setSQL();
 
-            if ($red !== false) {
+            $data["city"] = $city_id;
+            $data["country"] = $country_id;
 
-                $data["id"] = $red->id;
+            if ($band !== false) {
+
+                $data["id"] = $band->id;
                 $sql = "update `rock_band` set " . $set . " where `id` = :id ;";
 
             } else {
@@ -32,7 +36,7 @@
 
             Autoloader::getInstance()->manager("DataBase")->execute($sql,$data);
 
-            return  (($red !== false) ? $red->id :  Autoloader::getInstance()->manager("DataBase")->lastInsertId());
+            return  (($band !== false) ? $band->id :  Autoloader::getInstance()->manager("DataBase")->lastInsertId());
         }
 
         /**
@@ -65,6 +69,48 @@
 
         }
 
+        private function get_country($name){
+
+            $sql = "select `id` from `country` where `name` = :name ;";
+            $data = ['name' => $name ];
+
+            $country = Autoloader::getInstance()->manager("DataBase")->result(true , $sql, $data);
+
+            if($country !== false ){
+
+                return $country->id ;
+
+            }
+
+            $sql = "insert into `country` set `name` = :name ;";
+
+            Autoloader::getInstance()->manager("DataBase")->execute($sql,$data);
+
+            return Autoloader::getInstance()->manager("DataBase")->lastInsertId();
+
+        }
+
+        private function get_city($name,$country_id){
+
+            $sql = "select `id` from `city` where `name` = :name and `country_id` = :country_id ;";
+            $data = ['name' => $name , 'country_id' => $country_id ];
+
+            $city = Autoloader::getInstance()->manager("DataBase")->result(true , $sql, $data);
+
+            if($city !== false ){
+
+                return $city->id ;
+
+            }
+
+            $sql = "insert into `city` set `name` = :name, country_id = :country_id ;";
+
+            Autoloader::getInstance()->manager("DataBase")->execute($sql,$data);
+
+            return Autoloader::getInstance()->manager("DataBase")->lastInsertId();
+
+        }
+
         /**
          * list enregistrement
          * @var DataBaseManager $db
@@ -72,7 +118,19 @@
          */
         public function list_band()
         {
-            $sql_list = "select * from `rock_band` ;";
+            $sql_list = "select r.id, r.name ,
+                            r.start_year,
+                            r.end_year ,
+                            r.founder,
+                            r.member_count ,
+                            r.music_type ,
+                            r.presentation ,
+                            co.name as country,
+                            ci.name as city 
+                from `rock_band` r 
+                left join city ci on ci.id = r.city
+                left join country co on co.id = r.country and ci.country_id = co.id
+            ;";
 
             return Autoloader::getInstance()->manager("DataBase")->result(false , $sql_list);
         }
