@@ -38,8 +38,6 @@ class ConfigManager
 
         if($this->option("display","error"))
             ini_set('display_errors', true);
-        
-
     }
 
     /**
