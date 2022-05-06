@@ -18,7 +18,6 @@
             $country_id = $this->get_country($data["country"]);
             $city_id = $this->get_city($data["city"],$country_id);
 
-
             $set = Autoloader::getInstance()->model("RockBand")::str_setSQL();
 
             $data["city"] = $city_id;

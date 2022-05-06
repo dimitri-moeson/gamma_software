@@ -27,19 +27,44 @@ USE `gamma_software`;
 -- --------------------------------------------------------
 
 --
--- Structure de la table `rock_band`
+-- Structure de la table `city`
 --
--- Création :  mer. 04 mai 2022 à 08:18
+
+DROP TABLE IF EXISTS `city`;
+CREATE TABLE IF NOT EXISTS `city` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `country_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `country`
+--
+
+DROP TABLE IF EXISTS `country`;
+CREATE TABLE IF NOT EXISTS `country` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `rock_band`
 --
 
 DROP TABLE IF EXISTS `rock_band`;
 CREATE TABLE IF NOT EXISTS `rock_band` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `start_year` int(11) NOT NULL,
-  `end_year` int(11) DEFAULT NULL,
+  `country` int(11) NOT NULL,
+  `city` int(11) NOT NULL,
+  `start_year` year(4) NOT NULL,
+  `end_year` year(4) DEFAULT NULL,
   `founder` varchar(255) DEFAULT NULL,
   `member_count` int(11) DEFAULT NULL,
   `music_type` varchar(255) DEFAULT NULL,
@@ -47,8 +72,6 @@ CREATE TABLE IF NOT EXISTS `rock_band` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- RELATIONS POUR LA TABLE `rock_band`:
 --
 COMMIT;
 
