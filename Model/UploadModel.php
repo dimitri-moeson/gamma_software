@@ -1,5 +1,6 @@
 <?php namespace Model {
 
+    use Manager\Autoloader;
     use Manager\simplexlsx\SimpleXLSX;
 
     /**
@@ -34,6 +35,7 @@
          * @var array
          */
         private static $allowed_ext = array('xlsx');
+        private static $imported = false ;
 
         /**
          * @param $index
@@ -57,36 +59,56 @@
          * @param $filedata
          * @return bool|int|SimpleXLSX
          */
-        public static function checking($filedata)
+        public static function checking()
         {
-            // import
-            if ($filedata["error"] == 0) {
+            if (Autoloader::getInstance()->manager("request")->submitted()) {
 
-                $fname = $filedata['name'];
-                $ext = pathinfo($fname, PATHINFO_EXTENSION);
+                if (Autoloader::getInstance()->manager("request")->uploaded("file")) {
 
-                if (in_array($ext, self::getAllowedExt())) {
+                    $filedata = Autoloader::getInstance()->manager("request")->file("file");
 
-                    if ($filedata["size"] > 0) {
+                    self::$imported = true;
 
-                        $filename = $filedata["tmp_name"];
+                    // import
+                    if ($filedata["error"] == 0) {
 
-                        $xlsx = SimpleXLSX::parse($filename);
+                        $fname = $filedata['name'];
+                        $ext = pathinfo($fname, PATHINFO_EXTENSION);
 
-                        if ($xlsx !== false)
-                            return $xlsx;
+                        if (in_array($ext, self::getAllowedExt())) {
 
-                        else
-                            return 9;
+                            if ($filedata["size"] > 0) {
+
+                                $filename = $filedata["tmp_name"];
+
+                                $xlsx = SimpleXLSX::parse($filename);
+
+                                if ($xlsx !== false)
+                                    return $xlsx;
+
+                                else
+                                    return 9;
+
+                            } else
+                                return 10;
+
+                        } else
+                            return 5;
 
                     } else
-                        return 10;
+                        return $filedata["error"];
+                }
+            }
 
-                } else
-                    return 5;
+            return false;
+        }
 
-            } else
-                return $filedata["error"] ;
+        /**
+         * @return bool
+         */
+        public static function isImported()
+        {
+            return self::$imported;
         }
     }
 }

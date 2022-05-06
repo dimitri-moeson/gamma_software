@@ -21,12 +21,6 @@
         private $err;
 
         /**
-         *  si l'import a été lancé
-         * @var bool
-         */
-        private $imported = false ;
-
-        /**
          * lignes du XLSX non enregistrées => pas de nom de groupe
          * @var array
          */
@@ -41,7 +35,6 @@
             $this->manager = Autoloader::getInstance()->manager("RockBand");// $manager ;
             $this->err = 0 ;
             $this->failed = [];
-            $this->imported = false ;
         }
 
         /**
@@ -50,47 +43,44 @@
          * @var UploadModel $uploader
          * @var RockBandModel $manager
          */
-        public function import($filedata)
+        public function import()
         {
-            $this->imported = true ;
-
             /** @var int|SimpleXLSX $xlsx */
-            $xlsx =  Autoloader::getInstance()->model("Upload")::checking($filedata);
+            $xlsx = Autoloader::getInstance()->model("Upload")::checking();
 
-            if(is_int($xlsx)) {
+            if($xlsx!== false) {
+                if (is_int($xlsx)) {
 
-                $this->err = $xlsx;
+                    $this->err = $xlsx;
 
-            } else {
+                } else {
 
-                // liste des IDs présent en base et correspondant dans le fichier
-                $exists = [];
+                    // liste des IDs présent en base et correspondant dans le fichier
+                    $exists = [];
 
-                foreach ($xlsx->rows() as $k => $getData) {
+                    foreach ($xlsx->rows() as $k => $getData) {
 
-                    if ($k === 0) {
+                        if ($k === 0) {
 
-                        continue; // skip first row
-
-                    } else {
-
-                        $data = Autoloader::getInstance()->model("RockBand")::convert_format($getData);
-
-                        if ($data !== false ) {
-
-                            $red = $this->manager->get_band($data["name"]);
-
-                            $exists["index_" . $k] = $this->manager->save_band($data, $red);
+                            continue; // skip first row
 
                         } else {
 
-                            $this->failed[] = $k;
+                            $data = Autoloader::getInstance()->model("RockBand")::convert_format($getData);
+
+                            if ($data !== false) {
+
+                                $exists["index_" . $k] = $this->manager->save_band($data);
+
+                            } else {
+
+                                $this->failed[] = $k;
+                            }
+
                         }
-
                     }
+                    $this->manager->remove_band($exists);
                 }
-
-                $this->manager->remove_band($exists);
             }
         }
 
@@ -102,13 +92,7 @@
             return $this->err;
         }
 
-        /**
-         * @return bool
-         */
-        public function isImported()
-        {
-            return $this->imported;
-        }
+
 
         /**
          * @return array

@@ -8,12 +8,15 @@
         /**
          * enregistre/met à jour la ligne en base de données et retourne l'ID associé
          * @param $data
-         * @param $red
+         * @var $red
          * @var RockBandModel $model
          * @var DataBaseManager $db
          * @return string
          */
-        public function save_band($data,$red){
+        public function save_band($data){
+
+            $red = $this->get_band($data["name"]);
+
 
             $set = Autoloader::getInstance()->model("RockBand")::str_setSQL();
 
@@ -53,7 +56,7 @@
          * @var DataBaseManager $db
          * @return int rock_band_id
          */
-        public function get_band($name){
+        private function get_band($name){
 
             $sql = "select `id` from `rock_band` where `name` = :name ;";
             $data = ['name' => $name ];

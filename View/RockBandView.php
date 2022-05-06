@@ -84,7 +84,7 @@
 
             $controller = Autoloader::getInstance()->controller("RockBand");
 
-            if($controller->isImported()) {
+            if(Autoloader::getInstance()->model("upload")::isImported()) {
 
                 $html .= self::indent(3) . "<b>" . Autoloader::getInstance()->model("upload")::getErr($controller->getErr()) . "</b><br/>";
 
