@@ -1,8 +1,12 @@
 <?php namespace Manager {
 
     use Controller\RockBandController;
-    use Model\RockBandModel;
-    use View\RockBandView;
+	use Manager\ConfigManager;
+	use Manager\DataBaseManager;
+	use Manager\RequestManager;
+	use Model\RockBandModel;
+	use Model\UploadModel;
+	use View\RockBandView;
 
     /**
      * Class Autoloader
@@ -90,7 +94,7 @@
         /**
          * @param $name
          * @param array $options
-         * @return RockBandModel
+         * @return RockBandModel|UploadModel
          */
         public function model($name,$options = [])
         {
@@ -100,7 +104,7 @@
         /**
          * @param $name
          * @param array $options
-         * @return RockBandManager
+         * @return RockBandManager|DataBaseManager|RequestManager|ConfigManager
          */
         public function manager($name,$options = [])
         {

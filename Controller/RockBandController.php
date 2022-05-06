@@ -32,7 +32,6 @@
          */
         public function __construct()
         {
-            $this->manager = Autoloader::getInstance()->manager("RockBand");// $manager ;
             $this->err = 0 ;
             $this->failed = [];
         }
@@ -52,8 +51,8 @@
                 if (is_int($xlsx))
                     $this->err = $xlsx;
                 else {
-                    // liste des IDs présent en base et correspondant dans le fichier
-                    $exists = [];
+                    
+                    $exists = []; // liste des IDs présent en base et correspondant dans le fichier
 
                     foreach ($xlsx->rows() as $k => $getData) {
 
@@ -64,12 +63,12 @@
                             $data = Autoloader::getInstance()->model("RockBand")::convert_format($getData);
 
                             if ($data !== false)
-                                $exists["index_" . $k] = $this->manager->save_band($data);
+                                $exists["index_" . $k] = Autoloader::getInstance()->manager("RockBand")->save_band($data);
                             else
                                 $this->failed[] = $k;
                         }
                     }
-                    $this->manager->remove_band($exists);
+	                Autoloader::getInstance()->manager("RockBand")->remove_band($exists);
                 }
             }
         }
