@@ -85,21 +85,16 @@
 
                                 if ($xlsx !== false)
                                     return $xlsx;
-
                                 else
                                     return 9;
-
                             } else
                                 return 10;
-
                         } else
                             return 5;
-
                     } else
                         return $filedata["error"];
                 }
             }
-
             return false;
         }
 
