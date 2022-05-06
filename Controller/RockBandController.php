@@ -35,6 +35,13 @@
             $this->err = 0 ;
             $this->failed = [];
         }
+	
+	    public function details()
+	    {
+		    //$this->id = Autoloader::getInstance()->manager("request")->get("id");
+		    
+		    //$this->band = Autoloader::getInstance()->manager("RockBand")->get_rock($id);
+        }
 
         /**
          * @param $filedata
