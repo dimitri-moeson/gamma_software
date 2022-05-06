@@ -12,7 +12,7 @@
         /**
          * @var array
          */
-        private static $error_model = array(
+        private $error_model = array(
 
             0 => 'le téléchargement est correct',
             1 => 'La taille du fichier téléchargé excède la valeur de upload_max_filesize, configurée dans le php.ini',
@@ -34,32 +34,36 @@
         /**
          * @var array
          */
-        private static $allowed_ext = array('xlsx');
-        private static $imported = false ;
+        private $allowed_ext = array('xlsx');
+        
+	    /**
+	     * @var bool
+	     */
+        private $imported = false ;
 
         /**
          * @param $index
          * @return mixed
          */
-        public static function getErr($index)
+        public function getErr($index)
         {
-            if(array_key_exists($index,self::$error_model))
-                return self::$error_model[$index];
+            if(array_key_exists($index,$this->error_model))
+                return $this->error_model[$index];
         }
 
         /**
          * @return array
          */
-        private static function getAllowedExt()
+        private function getAllowedExt()
         {
-            return self::$allowed_ext;
+            return $this->allowed_ext;
         }
 
         /**
          * @param $filedata
          * @return bool|int|SimpleXLSX
          */
-        public static function checking()
+        public function checking()
         {
             if (Autoloader::getInstance()->manager("request")->submitted()) {
 
@@ -67,7 +71,7 @@
 
                     $filedata = Autoloader::getInstance()->manager("request")->file("file");
 
-                    self::$imported = true;
+                    $this->imported = true;
 
                     // import
                     if ($filedata["error"] == 0) {
@@ -75,7 +79,7 @@
                         $fname = $filedata['name'];
                         $ext = pathinfo($fname, PATHINFO_EXTENSION);
 
-                        if (in_array($ext, self::getAllowedExt())) {
+                        if (in_array($ext, $this->getAllowedExt())) {
 
                             if ($filedata["size"] > 0) {
 
@@ -101,9 +105,9 @@
         /**
          * @return bool
          */
-        public static function isImported()
+        public function isImported()
         {
-            return self::$imported;
+            return $this->imported;
         }
     }
 }

@@ -5,7 +5,7 @@
         /**
          * @var array
          */
-        private static $data_model = array(
+        private $data_model = array(
 
             "name" ,
             "country",
@@ -22,13 +22,13 @@
          * @param $getData
          * @return bool|mixed
          */
-        public static function convert_format($getData)
+        public function convert_format($getData)
         {
-            if (self::check_data($getData)) {
+            if ($this->check_data($getData)) {
 
-                $data = self::format_data($getData);
+                $data = $this->format_data($getData);
 
-                if (self::confirm_line($data))
+                if ($this->confirm_line($data))
                     return $data ;
                 
             }
@@ -40,7 +40,7 @@
          * @param $getData
          * @return bool
          */
-        private static function check_data($getData)
+        private function check_data($getData)
         {
             if(!isset($getData[0]))
                 return false;
@@ -58,11 +58,11 @@
          * @param $getData
          * @return mixed
          */
-        private static function format_data($getData){
+        private function format_data($getData){
 
             $data = [];
 
-            foreach (self::$data_model as $index => $name)
+            foreach ($this->data_model as $index => $name)
                 $data[$name] = $getData[$index]!="" ? $getData[$index] : null  ;
 
             return $data ;
@@ -74,16 +74,13 @@
          * @param $data
          * @return bool
          */
-        private static function confirm_line($data){
+        private function confirm_line($data){
 
             if(isset($data["name"]))
                 if(!empty($data["name"]))
                     if(!is_null($data["name"]))
                         return true;
-                    
-                
             
-
             return false ;
         }
 
@@ -91,7 +88,7 @@
          * @param $data
          * @return string
          */
-        public static function nullable($data){
+        public function nullable($data){
 
             return ( $data == 0 || $data == null  ? "" : $data) ;
         }
@@ -99,10 +96,10 @@
         /**
          * @return string
          */
-        public static function str_setSQL(){
+        public function str_setSQL(){
 
             $array_set = [];
-            foreach (self::$data_model as $index => $name)
+            foreach ($this->data_model as $index => $name)
                 $array_set[$index] = " `$name` = :$name " ;
 
             return implode(',', $array_set) ;
