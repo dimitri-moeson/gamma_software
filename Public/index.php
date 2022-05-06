@@ -4,8 +4,10 @@ use Manager\Autoloader;
 
 require_once realpath(__DIR__ . '/../Manager/Autoloader.php');
 
-Autoloader::getInstance()->register();
+		Autoloader::getInstance()->register();
 
-Autoloader::getInstance()->controller("RockBand")->import();
+$p =    Autoloader::getInstance()->manager("request")->get("p", "import");
 
-print Autoloader::getInstance()->view("RockBand")::body_html();
+		Autoloader::getInstance()->controller("RockBand")->$p();
+
+print   Autoloader::getInstance()->view("RockBand")->$p();
