@@ -20,9 +20,46 @@
 
         /**
          * @param $getData
+         * @return bool|mixed
+         */
+        public static function convert_format($getData)
+        {
+            if (self::check_data($getData)) {
+
+                $data = self::format_data($getData);
+
+                if (self::confirm_line($data)) {
+
+                    return $data ;
+                }
+            }
+
+            return false ;
+        }
+
+        /**
+         * @param $getData
+         * @return bool
+         */
+        private static function check_data($getData)
+        {
+            if(!isset($getData[0]))
+                return false;
+
+            if(empty($getData[0]))
+                return false;
+
+            if(is_null($getData[0]))
+                return false;
+
+            return true ;
+        }
+
+        /**
+         * @param $getData
          * @return mixed
          */
-        public static function format_data($getData){
+        private static function format_data($getData){
 
             $data = [];
 
@@ -38,7 +75,7 @@
          * @param $data
          * @return bool
          */
-        public static function confirm_line($data){
+        private static function confirm_line($data){
 
             if(isset($data["name"])){
 
@@ -70,7 +107,7 @@
 
             $array_set = [];
             foreach (self::$data_model as $index => $name)
-                $array_set[$index] = "$name = :$name" ;
+                $array_set[$index] = " `$name` = :$name " ;
 
             return implode(',', $array_set) ;
         }

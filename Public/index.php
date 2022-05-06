@@ -5,13 +5,13 @@ use Manager\Autoloader;
 use Manager\RockBandManager;
 use View\RockBandView;
 
-require_once realpath(__DIR__ . '/../config/config.php');
 require_once realpath(__DIR__ . '/../Manager/Autoloader.php');
 
-Autoloader::register();
+Autoloader::getInstance()->register();
 
-$manager = new RockBandManager();
-$controller = new RockBandController($manager);
+$manager = Autoloader::getInstance()->manager("RockBand");//new RockBandManager();
+$controller = Autoloader::getInstance()->controller("RockBand");// new RockBandController($manager);
+$view = Autoloader::getInstance()->view("RockBand");
 
 if (getenv('REQUEST_METHOD') === "POST" && isset($_POST['send'])) {
 
@@ -21,4 +21,6 @@ if (getenv('REQUEST_METHOD') === "POST" && isset($_POST['send'])) {
     }
 }
 
-print RockBandView::body_html($controller,$manager);
+print $view::body_html();
+
+var_dump(ini_get_all(null, true ));

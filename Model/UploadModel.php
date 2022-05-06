@@ -1,5 +1,7 @@
 <?php namespace Model {
 
+    use Manager\simplexlsx\SimpleXLSX;
+
     /**
      * Class UploadModel
      * @package Model
@@ -23,7 +25,9 @@
 
             5 => "le fichier n'est pas en XLSX.",
 
-            9 => "le fichier XLSX est invalide."
+            9 => "le fichier XLSX est invalide.",
+
+            10 => "le fichier est vide."
         );
 
         /**
@@ -44,9 +48,45 @@
         /**
          * @return array
          */
-        public static function getAllowedExt()
+        private static function getAllowedExt()
         {
             return self::$allowed_ext;
+        }
+
+        /**
+         * @param $filedata
+         * @return bool|int|SimpleXLSX
+         */
+        public static function checking($filedata)
+        {
+            // import
+            if ($filedata["error"] == 0) {
+
+                $fname = $filedata['name'];
+                $ext = pathinfo($fname, PATHINFO_EXTENSION);
+
+                if (in_array($ext, self::getAllowedExt())) {
+
+                    if ($filedata["size"] > 0) {
+
+                        $filename = $filedata["tmp_name"];
+
+                        $xlsx = SimpleXLSX::parse($filename);
+
+                        if ($xlsx !== false)
+                            return $xlsx;
+
+                        else
+                            return 9;
+
+                    } else
+                        return 10;
+
+                } else
+                    return 5;
+
+            } else
+                return $filedata["error"] ;
         }
     }
 }

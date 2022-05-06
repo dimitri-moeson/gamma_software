@@ -1,9 +1,11 @@
 <?php namespace Controller {
 
-    use Manager\simplexlsx\SimpleXLSX;
-    use Model\RockBandModel;
-    use Manager\RockBandManager;
-    use Model\UploadModel;
+    use Manager\{
+        Autoloader, RockBandManager, simplexlsx\SimpleXLSX
+    };
+    use Model\{
+        RockBandModel, UploadModel
+    };
 
     class RockBandController
     {
@@ -32,11 +34,11 @@
 
         /**
          * RockBandController constructor.
-         * @param RockBandManager $manager
+         * @var RockBandManager $manager
          */
-        public function __construct(RockBandManager $manager)
+        public function __construct()
         {
-            $this->manager = $manager ;
+            $this->manager = Autoloader::getInstance()->manager("RockBand");// $manager ;
             $this->err = 0 ;
             $this->failed = [];
             $this->imported = false ;
@@ -44,66 +46,51 @@
 
         /**
          * @param $filedata
+         * @var RockBandManager $manager
+         * @var UploadModel $uploader
+         * @var RockBandModel $manager
          */
         public function import($filedata)
         {
             $this->imported = true ;
 
-            // import
-            if ($filedata["error"] == 0) {
+            /** @var int|SimpleXLSX $xlsx */
+            $xlsx =  Autoloader::getInstance()->model("Upload")::checking($filedata);
 
-                $fname = $filedata['name'];
-                $ext = pathinfo($fname, PATHINFO_EXTENSION);
+            if(is_int($xlsx)) {
 
-                if (in_array($ext, UploadModel::getAllowedExt())) {
-
-                    $filename = $filedata["tmp_name"];
-
-                    if ($xlsx = SimpleXLSX::parse($filename)) {
-
-                        if ($filedata["size"] > 0) {
-
-                            // liste des IDs présent en base et correspondant dans le fichier
-                            $exists = [];
-
-                            foreach ($xlsx->rows() as $k => $getData) {
-
-                                if ($k == 0) {
-
-                                    continue; // skip first row
-
-                                } else {
-
-                                    $data = RockBandModel::format_data($getData);
-
-                                    if (RockBandModel::confirm_line($data)) {
-
-                                        $red = $this->manager->get_band($data["name"]);
-
-                                        $exists["index_" . $k] = $this->manager->save_band($data, $red);
-
-                                    } else {
-
-                                        $this->failed[] = $k;
-                                    }
-                                }
-                            }
-
-                            $this->manager->remove_band($exists);
-                        }
-                    } else {
-
-                        $this->err = 9;
-                    }
-
-                } else {
-
-                    $this->err = 5;
-                }
+                $this->err = $xlsx;
 
             } else {
 
-                $this->err = $filedata["error"] ;
+                // liste des IDs présent en base et correspondant dans le fichier
+                $exists = [];
+
+                foreach ($xlsx->rows() as $k => $getData) {
+
+                    if ($k === 0) {
+
+                        continue; // skip first row
+
+                    } else {
+
+                        $data = Autoloader::getInstance()->model("RockBand")::convert_format($getData);
+
+                        if ($data !== false ) {
+
+                            $red = $this->manager->get_band($data["name"]);
+
+                            $exists["index_" . $k] = $this->manager->save_band($data, $red);
+
+                        } else {
+
+                            $this->failed[] = $k;
+                        }
+
+                    }
+                }
+
+                $this->manager->remove_band($exists);
             }
         }
 

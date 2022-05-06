@@ -5,7 +5,7 @@
     class DataBaseManager
     {
         /**
-         * @var
+         * @var DataBaseManager
          */
         private static $instance;
 
@@ -37,9 +37,49 @@
 
                 try {
 
-                    $dsn = DB_BASE . ':dbname=' . DB_NAME . ';host=' . DB_HOST;
-                    $this->dbh = new PDO($dsn, DB_USER, DB_PASS, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-                    $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $conf = Autoloader::getInstance()->manager("config");
+
+                    $dsn = $conf->param('db_serv') . ':'
+                        .'dbname='  . $conf->param('db_name') .';'
+                        .'host='    . $conf->param('db_host') .';' ;
+
+                    $arr_conf = array(
+
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+
+                    );
+
+                    $trace = $conf->exists('db_trac')  ;
+                    $charset = $conf->exists('db_char')  ;
+
+                    if($trace !== false ){
+
+                        $arr_conf[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION  ;
+                    }
+
+                    if($charset !== false ) {
+
+                        $sql_charset =  'SET NAMES ' . $conf->option('db_char') ;
+
+                        if($conf->option('db_coll') != false) {
+
+                            $sql_charset .= ' COLLATE '.$conf->option('db_coll') ;
+                        }
+
+                        $sql_charset .= ';' ;
+
+
+                        $dsn .= 'charset=' . $conf->option('db_char') . ';';
+                        $arr_conf[PDO::MYSQL_ATTR_INIT_COMMAND] = $sql_charset ;
+                    }
+
+                    $this->dbh = new PDO($dsn,  $conf->param('db_user'), $conf->param('db_pass'), $arr_conf );
+
+                    if($charset !== false )
+                        $this->dbh->exec( $sql_charset );
+
+                    if($trace !== false )
+                        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 } catch (\Exception $e) {
 
@@ -89,14 +129,6 @@
                     return $sth->fetchAll(PDO::FETCH_OBJ);
                 }
             }
-        }
-
-        /**
-         * @return PDO
-         */
-        public function getConn()
-        {
-            return $this->dbh;
         }
 
         /**
