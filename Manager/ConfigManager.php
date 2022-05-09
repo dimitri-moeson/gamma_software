@@ -21,7 +21,6 @@ class ConfigManager
     /**
      * App constructor.
      * importe e fichier de config
-     * @param $file
      */
     private function __construct()
     {
@@ -39,10 +38,13 @@ class ConfigManager
         if($this->option("display","error"))
             ini_set('display_errors', true);
     }
-
-    /**
-     * @return bool
-     */
+    
+	/**
+	 * @param        $key
+	 * @param string $dom
+	 *
+	 * @return bool
+	 */
     public function exists($key, $dom = "database")
     {
         $hasBase = array_key_exists($dom, $this->settings);

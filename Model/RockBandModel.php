@@ -22,8 +22,8 @@
          * @param $getData
          * @return bool|mixed
          */
-        public function convert_format($getData)
-        {
+        public function convert_format($getData) : array {
+        	
             if ($this->check_data($getData)) {
 
                 $data = $this->format_data($getData);
@@ -40,8 +40,7 @@
          * @param $getData
          * @return bool
          */
-        private function check_data($getData)
-        {
+        private function check_data($getData) : bool {
             if(!isset($getData[0]))
                 return false;
 
@@ -58,7 +57,7 @@
          * @param $getData
          * @return mixed
          */
-        private function format_data($getData){
+        private function format_data($getData) : array {
 
             $data = [];
 
@@ -74,7 +73,7 @@
          * @param $data
          * @return bool
          */
-        private function confirm_line($data){
+        private function confirm_line($data) : bool {
 
             if(isset($data["name"]))
                 if(!empty($data["name"]))
@@ -88,7 +87,7 @@
          * @param $data
          * @return string
          */
-        public function nullable($data){
+        public function nullable($data) : string {
 
             return ( $data == 0 || $data == null  ? "" : $data) ;
         }
@@ -96,7 +95,7 @@
         /**
          * @return string
          */
-        public function str_setSQL(){
+        public function str_setSQL() : string {
 
             $array_set = [];
             foreach ($this->data_model as $index => $name)
@@ -104,7 +103,25 @@
 
             return implode(',', $array_set) ;
         }
-
-
+	
+	    public function make_setSQL($datas) : string {
+		
+		    $array_set = [];
+		    foreach ($datas as $key => $val)
+			    $array_set[] = " `$key` = :$key " ;
+		
+		    return implode(',', $array_set) ;
+	    }
+	
+	    public function format_post($getData) : array {
+		
+		    $data = [];
+		
+		    foreach ($this->data_model as $v)
+			    $data[$v] = $getData[$v]!="" ? $getData[$v] : null  ;
+		
+		    return $data ;
+		
+	    }
     }
 }

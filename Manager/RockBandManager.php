@@ -3,7 +3,28 @@
     use Model\RockBandModel;
 
     class RockBandManager {
-
+	
+	    /**
+	     * @param $data
+	     * @param $id
+	     *
+	     * @return string
+	     */
+	    public function save_edit($data,$id)
+	    {
+		    $set = Autoloader::getInstance()->model("RockBand")->str_setSQL();
+		
+		    $band = $this->get_rock($id);
+		    
+		    $data["id"] = $band->id;
+		    $data["city"] = $band->country_id;
+		    $data["country"] = $band->city_id;
+		    
+		    $sql = "update `rock_band` set " . $set . " where `id` = :id ;";
+		    
+		    return Autoloader::getInstance()->manager("DataBase")->execute($sql,$data);
+	    }
+    	
         /**
          * enregistre/met à jour la ligne en base de données et retourne l'ID associé
          * @param $data
@@ -18,7 +39,7 @@
             $country_id = $this->get_country($data["country"]);
             $city_id = $this->get_city($data["city"],$country_id);
 
-            $set = Autoloader::getInstance()->model("RockBand")::str_setSQL();
+            $set = Autoloader::getInstance()->model("RockBand")->str_setSQL();
 
             $data["city"] = $city_id;
             $data["country"] = $country_id;
@@ -27,9 +48,8 @@
                 $data["id"] = $band->id;
                 $sql = "update `rock_band` set " . $set . " where `id` = :id ;";
 
-            } else {
+            } else
                 $sql = "insert into `rock_band` set " . $set." ;";
-            }
 
             Autoloader::getInstance()->manager("DataBase")->execute($sql,$data);
 
@@ -127,6 +147,11 @@
             return Autoloader::getInstance()->manager("DataBase")->result(false , $sql_list);
         }
 	
+	    /**
+	     * @param $id
+	     *
+	     * @return array|mixed
+	     */
 	    public function get_rock($id)
 	    {
 		    $sql_list = "select r.id, r.name ,
@@ -136,8 +161,8 @@
                             r.member_count ,
                             r.music_type ,
                             r.presentation ,
-                            co.name as country,
-                            ci.name as city
+                            co.name as country, co.id as country_id ,
+                            ci.name as city, ci.id as city_id
                 from `rock_band` r
                 left join city ci on ci.id = r.city
                 left join country co on co.id = r.country and ci.country_id = co.id
@@ -147,6 +172,22 @@
 		    $data = ['id' => $id ];
 		    
 		    return Autoloader::getInstance()->manager("DataBase")->result(true , $sql_list , $data);
+	    }
+	
+	    /**
+	     * @param $id
+	     *
+	     * @return int
+	     */
+	    public function remove_rock($id){
+		
+		    $sql_del = "delete from `rock_band` where `id` =  :id ;";
+		
+		    $data = ['id' => $id ];
+		
+		    $sth_del = Autoloader::getInstance()->manager("DataBase")->execute($sql_del,$data);
+		
+		    return $sth_del->rowCount();
 	    }
     }
 }

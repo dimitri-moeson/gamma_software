@@ -36,6 +36,8 @@
          */
         private $allowed_ext = array('xlsx');
         
+        
+        private $allowed_mime = array ( 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 	    /**
 	     * @var bool
 	     */
@@ -45,7 +47,7 @@
          * @param $index
          * @return mixed
          */
-        public function getErr($index)
+        public function getErr($index) : string
         {
             if(array_key_exists($index,$this->error_model))
                 return $this->error_model[$index];
@@ -54,7 +56,7 @@
         /**
          * @return array
          */
-        private function getAllowedExt()
+        private function getAllowedExt():array
         {
             return $this->allowed_ext;
         }
@@ -63,36 +65,34 @@
          * @param $filedata
          * @return bool|int|SimpleXLSX
          */
-        public function checking()
+        public function checking($name = "file")
         {
             if (Autoloader::getInstance()->manager("request")->submitted()) {
 
-                if (Autoloader::getInstance()->manager("request")->uploaded("file")) {
+                if (Autoloader::getInstance()->manager("request")->uploaded($name)) {
 
-                    $filedata = Autoloader::getInstance()->manager("request")->file("file");
+                    $filedata = Autoloader::getInstance()->manager("request")->file($name);
 
                     $this->imported = true;
 
                     // import
                     if ($filedata["error"] == 0) {
 
-                        $fname = $filedata['name'];
-                        $ext = pathinfo($fname, PATHINFO_EXTENSION);
+                        $ext = pathinfo($filedata['name'], PATHINFO_EXTENSION);
+	                    $mime = mime_content_type($filedata['name']);
 
                         if (in_array($ext, $this->getAllowedExt())) {
-
-                            if ($filedata["size"] > 0) {
-
-                                $filename = $filedata["tmp_name"];
-
-                                $xlsx = SimpleXLSX::parse($filename);
-
-                                if ($xlsx !== false)
-                                    return $xlsx;
-                                else
-                                    return 9;
-                            } else
-                                return 10;
+	
+	                        if (in_array($mime, $this->getAllowedMime())) {
+	                        	
+		                        if ( $filedata[ "size" ] > 0 ) {
+			
+			                        return $filedata[ "tmp_name" ];
+			
+		                        } else
+			                        return 10;
+	                        }else
+		                        return 9;
                         } else
                             return 5;
                     } else
@@ -105,9 +105,17 @@
         /**
          * @return bool
          */
-        public function isImported()
+        public function isImported() : bool
         {
             return $this->imported;
         }
+	
+	    /**
+	     * @return array
+	     */
+	    public function getAllowedMime () : array
+	    {
+		    return $this -> allowed_mime;
+	    }
     }
 }

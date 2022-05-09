@@ -25,8 +25,13 @@
          * @var array
          */
         private $failed;
-
-        /**
+	
+	    /**
+	     * @var
+	     */
+	    public $band;
+	
+	    /**
          * RockBandController constructor.
          * @var RockBandManager $manager
          */
@@ -35,12 +40,49 @@
             $this->err = 0 ;
             $this->failed = [];
         }
+        
+	    public function edit()
+	    {
+		    $id = Autoloader::getInstance()->manager("request")->get("id");
+		    
+		    if (Autoloader::getInstance()->manager("request")->submitted()) {
+			
+			    $getData = Autoloader::getInstance()->manager("request")->content ();
+			    
+			    $data = Autoloader::getInstance()->model("RockBand")->format_post($getData);
+		    	
+			    Autoloader::getInstance()->manager("RockBand")->save_edit($data, $id);
+		    }
+		    
+		    $this->band = Autoloader::getInstance()->manager("RockBand")->get_rock($id);
+	    }
 	
+	    public function delete()
+	    {
+		    $id = Autoloader::getInstance()->manager("request")->get("id");
+		
+		    if (Autoloader::getInstance()->manager("request")->submitted()) {
+			
+		    	if(Autoloader::getInstance()->manager("request")->exists("remove")){
+				
+				    Autoloader::getInstance()->manager("RockBand")->remove_rock($id);
+				    
+			    }
+			    
+			    if(Autoloader::getInstance()->manager("request")->exists("suppr")){
+				    
+		    		$this->band = Autoloader::getInstance()->manager("RockBand")->get_rock($id);
+				
+			    }
+		    }
+			   
+	    }
+	    
 	    public function details()
 	    {
-		    //$this->id = Autoloader::getInstance()->manager("request")->get("id");
+		    $id = Autoloader::getInstance()->manager("request")->get("id");
 		    
-		    //$this->band = Autoloader::getInstance()->manager("RockBand")->get_rock($id);
+		    $this->band = Autoloader::getInstance()->manager("RockBand")->get_rock($id);
         }
 
         /**
@@ -51,9 +93,19 @@
          */
         public function import()
         {
-            /** @var int|SimpleXLSX $xlsx */
-            $xlsx = Autoloader::getInstance()->model("Upload")::checking();
-
+	        /**
+	         * @var string $filename
+	         */
+	        $filename = Autoloader::getInstance()->model("Upload")->checking("file");
+	
+	        /** @var int|SimpleXLSX $xlsx */
+	        $xlsx = SimpleXLSX::parse($filename);
+	
+	        /**if ($xlsx !== false)
+		        return $xlsx;
+	        else
+		        return 9;**/
+            
             if($xlsx!== false) {
                 if (is_int($xlsx))
                     $this->err = $xlsx;
@@ -67,7 +119,7 @@
                             continue; // skip first row
                         else {
 
-                            $data = Autoloader::getInstance()->model("RockBand")::convert_format($getData);
+                            $data = Autoloader::getInstance()->model("RockBand")->convert_format($getData);
 
                             if ($data !== false)
                                 $exists["index_" . $k] = Autoloader::getInstance()->manager("RockBand")->save_band($data);

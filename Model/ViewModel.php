@@ -11,6 +11,12 @@
 	
 	class ViewModel
 	{
+		public function __construct ($controller)
+		{
+			
+			$this->controller = $controller;
+		}
+		
 		/**
 		 * @param $repeat
 		 * @return string
@@ -41,6 +47,25 @@
 				.$this->indent(0);
 		}
 		
+		public function notfound_404 (  )
+		{
+			header("HTTP/1.0 404 Not found");
+			$content  = $this->header_html();
+			$content .= "err 404";
+			$content .= $this->footer_html();
+			
+			return trim($content) ;
+		}
+		
+		public function err_500 (  )
+		{
+			//header("HTTP/1.0 404 Not found");
+			$content  = $this->header_html();
+			$content .= "err 500";
+			$content .= $this->footer_html();
+			
+			return trim($content) ;
+		}
 		
 		/**
 		 * @return string

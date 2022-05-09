@@ -7,6 +7,7 @@
 	use Model\RockBandModel;
 	use Model\SqlModel;
 	use Model\UploadModel;
+	use Model\ViewModel;
 	use View\RockBandView;
 
     /**
@@ -64,7 +65,7 @@
             if(class_exists($classe_name)) {
 	            if ( ! is_callable ( [ $classe_name , "__construct" ] ) )
 		            if ( is_callable ( [ $classe_name , "getInstance" ] ) )
-			            return $classe_name ::getInstance ( $options );
+			            return $classe_name::getInstance($options);
 	            
 	            return new $classe_name( $options );
             }
@@ -95,7 +96,7 @@
         /**
          * @param $name
          * @param array $options
-         * @return RockBandModel|UploadModel|SqlModel
+         * @return RockBandModel|UploadModel|SqlModel|ViewModel
          */
         public function model($name,$options = [])
         {
@@ -110,6 +111,32 @@
         public function manager($name,$options = [])
         {
             return $this->instance($name,$options, "manager");
+        }
+	
+	    /**
+	     * @param $classname
+	     * @param $method
+	     */
+        public function execute($classname,$method){
+	
+	        $cnt = Autoloader::getInstance()->controller($classname);
+	        
+	        $view = Autoloader::getInstance()->view($classname,$cnt);
+	        
+	        if(!method_exists ($cnt,$method)) {
+		        // Autoloader::getInstance()->model("view")->err_500();
+		        Autoloader::getInstance()->model("view")->notfound_404 ();
+		        die();
+	        }
+	        
+	        if(!method_exists ($view,$method)) {
+		        Autoloader::getInstance()->model("view")->notfound_404 ();
+		        die();
+	        }
+	        
+	        $cnt->$method();
+	
+            print $view->$method();
         }
     }
 }
